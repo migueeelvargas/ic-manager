@@ -36,7 +36,7 @@ app.set("view engine", "ejs");
 app.use(express.static(__dirname + "/public"));
 
 // APP ROUTES
-const routes = require("./app/routes/routes")(app, express, conn);
+const routes = require("./app/api/routes")(app, express, conn);
 
 // CONNECT
 app.listen(port);
