@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="Inventory Control Manager">
+  <meta name="author" content="Team Nalu">
+  <title>Inventory Control Manager</title>
+
+  <!-- style reset, core bootstrap, and custom CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.css">
+    <script src="https://use.fontawesome.com/1128334790.js"></script>
+    <link rel="stylesheet" type ="text/css" href="/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/css/style.css">     
+</head>
+
+<body class="fixed-nav sticky-footer bg-dark" id="page-top">
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top" id="mainNav">
+    <a id="bizName" class="navbar-brand" href="/">Inventory Control Manager</a>
+
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarResponsive">
+
+      <ul class="navbar-nav navbar-sidenav" id="exampleAccordion">
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Dashboard">
+          <a class="nav-link" href="/">
+            <i class="fa fa-fw fa-dashboard"></i>
+            <span class="nav-link-text">Dashboard</span>
+          </a>
+        </li>
+
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Charts">
+          <a class="nav-link" href="/charts">
+            <i class="fa fa-fw fa-area-chart"></i>
+            <span class="nav-link-text">Charts</span>
+          </a>
+        </li>
+
+        <li class="nav-item" data-toggle="tooltip" data-placement="right" title="Inventory">
+          <a class="nav-link" href="/inventory">
+            <i class="fa fa-fw fa-table"></i>
+            <span class="nav-link-text">Inventory</span>
+          </a>
+        </li>
+      </ul>
+
+      <!-- top navbar -->
+      <ul class="navbar-nav ml-auto">
+        <!-- search -->
+        <li class="nav-item">
+          <form class="form-inline my-2 my-lg-0 mr-lg-2">
+            <div class="input-group">
+              <input class="form-control" type="text" placeholder="Search for...">
+              <span class="input-group-btn">
+                <button class="btn btn-primary" type="button">
+                  <i class="fa fa-search"></i>
+                </button>
+              </span>
+            </div>
+          </form>
+        </li>
+
+        <!-- login/logout -->
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="modal" data-target="#exampleModal">
+            <i class="fa fa-fw fa-sign-out"></i>Logout</a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Content -->
+  <div class="content-wrapper">
+    <div class="container-fluid">
+      <!-- Breadcrumbs-->
+      <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+          <a href="#">Dashboard</a>
+        </li>
+        <li class="breadcrumb-item active">Inventory Details</li>
+      </ol>
+
+      <!-- Data Table -->
+      <div class="card mb-3">
+        <div class="card-header">
+          <i class="fa fa-table"></i> Inventory Data
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>Item #</th>
+                  <th>SKU #</th>
+                  <th>Category</th>
+                  <th>Product Name</th>
+                  <th>Cost</th>
+                  <th>Retail price</th>
+                  <th>Quantity in stock</th>
+                  <th>Reorder Level</th>
+                </tr>
+              </thead>
+              
+              <tbody>
+                <% for (var i = 0; i < data.length; i++) {%>
+                  <tr>
+                      <td><%= data[i].item_id %></td>
+                      <td><%= data[i].sku %></td>
+                      <td><%= data[i].category %></td>
+                      <td><%= data[i].product_name %></td>
+                      <td><%= data[i].cost %></td>
+                      <td><%= data[i].price %></td>
+                      <td><%= data[i].stock_quantity %></td>
+                      <td><%= data[i].reorder_quantity %></td>
+                  </tr>
+                <% }%>
+              </tbody>
+            </table>
+        </div>
+
+        <div class="modalButton">
+          <button id="addNewProductBtn" class="btn btn-primary">Add New Product</button>
+        </div>
+      </div>
+
+      <div id="InventoryTableTimestamp" class="card-footer small text-muted">
+         <!-- timestamp text goes here -->
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="sticky-footer">
+      <div class="container">
+        <div class="text-center">
+          <small>Copyright © Team Nalu 2017</small>
+        </div>
+      </div>
+    </footer>
+
+    <!-- New Product Modal -->
+    <div id="addNewProductModal" class="modal">
+      <div id="modal-content-addProduct" class="modal-content">
+        <div class="modal-header">
+          <span class="close">&times;</span>
+          <h2></h2>
+        </div>
+
+        <div class="modal-body">
+          <form class="form-horizontal" action="/inventory" method="POST">
+            <fieldset>
+              <div class= "panel panel-info">
+                <div class="panel-heading">
+                  <h2>Add a Product</h2>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <!-- SKU -->
+                <div class="form-group col-md-12">
+                  <label for="inputSKU">SKU Number</label>
+                  <input type="text" class="form-control" name="sku" placeholder="#105">
+                </div>
+              </div>
+
+              <!-- Product Name -->
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <label for="inputName">Product Name</label>
+                  <input type="text" class="form-control" name="product_name" placeholder="Product Name">
+                </div>
+              </div>
+
+              <!-- Product Category -->
+              <div class="form-row">
+                <div class="form-group col-md-12">
+                  <label for="inputCategory">Category</label>
+                  <input type="text" class="form-control" name="category" placeholder="Books, Men's Clothing, etc.">
+                </div>
+              </div>
+              
+              <!-- Purchase Cost & Retail Price -->
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="inputCost">Purchase Cost</label>
+                  <input type="number" class="form-control" name="cost" placeholder="$">
+                </div>
+              
+                <div class="form-group col-md-6">
+                  <label for="inputRetail">Retail Price</label>
+                  <input type="number" class="form-control" name="price" placeholder="$">
+                </div>
+              </div>
+
+              <!-- Stock Quantity & Reorder Level-->
+              <div class="form-row">
+                <div class="form-group col-md-6">
+                  <label for="inputQty">Qty in Stock</label>
+                  <input type="number" class="form-control" name="stock_quantity" placeholder="#">
+                </div>
+
+                <div class="form-group col-md-6">
+                  <label for="inputReorder">Reorder Level</label>
+                  <input type="number" class="form-control" name="reorder_quantity" placeholder="#">
+                </div>
+              </div>
+              
+              <input class= "btn btn-success" type="submit" value="Save Item" name="submit">
+            </fieldset>
+          </form>
+        </div>
+
+        <div class="modal-footer">
+          <h3></h3>
+        </div>
+      </div>
+    </div>
+
+  <!-- Edit Product Modal -->
+  <div id="editProductModal" class="modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <span class="close">&times;</span>
+        <h2></h2>
+      </div>
+
+      <div class="modal-body">
+        <form id="newProductForm" class="form-horizontal">
+        <fieldset>
+          <div class= "panel panel-info">
+            <div class="panel-heading">
+              <h2>Add a Product</h2>
+            </div>
+          </div>
+            <div class="form-row">
+              <div class="form-group col-md-5">
+                <label for="inputName">Product Name</label>
+                <input type="text" class="form-control" id="inputName" placeholder="what is this product called?">
+              </div>
+              <div class="form-group col-md-4">
+                <label for="inputCategory">Category</label>
+                <input type="text" class="form-control" id="inputCategory" placeholder="what category does this product belong in?">
+              </div>
+              <div class="form-group col-md-3">
+                <label for="inputSKU">SKU Number</label>
+                <input type="number" class="form-control" id="inputSKU" placeholder="enter the SKU">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-9">
+                <label for="inputDescr">Product Description</label>
+                <input type="textarea" class="form-control" id="inputDesc" placeholder="product description">
+              </div>
+              <div class="form-group col-md-3">
+                <label for="inputImgURL">Image Link</label>
+                <input type="url" class="form-control" id="inputImgURL" placeholder="paste URL here">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group col-md-2">
+                <label for="inputCost">Purchase Cost</label>
+                <input type="number" class="form-control" id="inputCost" placeholder="$">
+              </div>
+              <div class="form-group col-md-2">
+                <label for="inputRetail">Retail Price</label>
+                <input type="number" class="form-control" id="inputRetail" placeholder="$">
+              </div>
+              <div class="form-group col-md-2">
+                <label for="inputSale">Discount %</label>
+                <input type="number" class="form-control" id="inputSale" placeholder="%">
+              </div>
+              <div class="form-group col-md-2">
+                <!-- empty div for spacing -->
+              </div>
+              <div class="form-group col-md-2">
+                <label for="inputQty">Qty in Stock</label>
+                <input type="number" class="form-control" id="inputQty" placeholder="#">
+              </div>
+              <div class="form-group col-md-2">
+                <label for="inputReorder">Reorder Level</label>
+                <input type="number" class="form-control" id="inputReorder" placeholder="#">
+              </div>
+            </div>  
+          <a href="#" class="btn btn-success" id="saveBtn"><i class="fa fa-floppy-o"></i> Save Item</a>
+          <a href="#" class="btn btn-warning" id="cancelBtn"><i class="fa fa-ban"></i> Cancel</a>
+        </fieldset>
+        </form>
+      </div>
+
+      <div class="modal-footer">
+        <h3></h3>
+      </div>
+    </div>
+  </div>
+
+  <!-- Logout Modal-->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+          <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">×</span>
+          </button>
+        </div>
+        <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+          <a class="btn btn-primary" href="login.html">Logout</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<!-- Core JavaScript -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.compatibility.js"></script>
+
+<!-- custom JS scripts -->
+<!-- <script src="/js/business.js"></script> -->
+<script src="/js/modal.js"></script>
+
+</body>
+</html>
